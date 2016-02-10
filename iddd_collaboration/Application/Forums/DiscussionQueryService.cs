@@ -8,7 +8,7 @@ using SaaSOvation.Collaboration.Application.Forums.Data;
 
 namespace SaaSOvation.Collaboration.Application.Forums
 {
-    public class DiscussionQueryService : AbstractQueryService
+    public class DiscussionQueryService : AbstractQueryService, IDiscussionQueryService
     {
         public DiscussionQueryService(string connectionString, string providerName)
             : base(connectionString, providerName)

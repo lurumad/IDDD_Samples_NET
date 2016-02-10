@@ -9,7 +9,7 @@ using SaaSOvation.Collaboration.Application.Forums.Data;
 
 namespace SaaSOvation.Collaboration.Application.Forums
 {
-    public class ForumQueryService : AbstractQueryService
+    public class ForumQueryService : AbstractQueryService, IForumQueryService
     {
         public ForumQueryService(string connectionString, string providerName)
             : base(connectionString, providerName)

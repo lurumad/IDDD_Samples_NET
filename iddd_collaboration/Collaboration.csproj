@@ -61,6 +61,8 @@
     <Compile Include="Application\Forums\DiscussionQueryService.cs" />
     <Compile Include="Application\Forums\ForumApplicationService.cs" />
     <Compile Include="Application\Forums\ForumQueryService.cs" />
+    <Compile Include="Application\Forums\IDiscussionQueryService.cs" />
+    <Compile Include="Application\Forums\IForumQueryService.cs" />
     <Compile Include="Application\Forums\PostApplicationService.cs" />
     <Compile Include="Application\Forums\PostQueryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

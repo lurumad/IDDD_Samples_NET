@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SaaSOvation.Collaboration.Domain.Model.Tenants;
 
 namespace SaaSOvation.Collaboration.Domain.Model.Forums
 {
@@ -12,5 +13,6 @@ namespace SaaSOvation.Collaboration.Domain.Model.Forums
         ForumId GetNextIdentity();
 
         void Save(Forum forum);
+        void Get(Tenant tenantId);
     }
 }

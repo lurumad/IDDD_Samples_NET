@@ -11,11 +11,6 @@ namespace SaaSOvation.Collaboration.Domain.Model.Forums
 {
     public class Forum : EventSourcedRootEntity
     {
-        public Forum(IEnumerable<IDomainEvent> eventStream, int streamVersion)
-            : base(eventStream, streamVersion)
-        {
-        }
-
         public Forum(Tenant tenantId, ForumId forumId, Creator creator, Moderator moderator, string subject, string description, string exclusiveOwner)
         {
             AssertionConcern.AssertArgumentNotNull(tenantId, "The tenant must be provided.");
@@ -26,6 +21,11 @@ namespace SaaSOvation.Collaboration.Domain.Model.Forums
             AssertionConcern.AssertArgumentNotEmpty(description, "The description must be provided.");
 
             Apply(new ForumStarted(tenantId, forumId, creator, moderator, subject, description, exclusiveOwner));
+        }
+
+        public Forum(IEnumerable<IDomainEvent> eventStream, int streamVersion)
+            : base(eventStream, streamVersion)
+        {
         }
 
         void When(ForumStarted e)

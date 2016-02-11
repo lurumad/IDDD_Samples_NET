@@ -16,65 +16,106 @@ namespace CollaborationContext.UnitTests
         [Fact]
         public void AssignModeratorToForum_ForumNull_ThrowException()
         {
-            var forumQueryService = new Mock<IForumQueryService>();
-            var forumRepository = new Mock<IForumRepository>();
-            var discussionRepository = new Mock<IDiscussionRepository>();
-            var postRepository = new Mock<IPostRepository>();
-            var forumIdentityService = new ForumIdentityService(
-                discussionRepository.Object,
-                forumRepository.Object,
-                postRepository.Object);
-            var discussionQueryService = new Mock<IDiscussionQueryService>();
-            var collaboratorService = new Mock<ICollaboratorService>();
-            var sut = new ForumApplicationService(
-                forumQueryService.Object,
-                forumRepository.Object,
-                forumIdentityService,
-                discussionQueryService.Object,
-                discussionRepository.Object,
-                collaboratorService.Object);
+            // Arrange
+            var sut = ForumApplicationServiceTestable.CreateSut(null, null);
 
+            // Act
             Action action = () => sut.AssignModeratorToForum("1", "1", "1");
 
+            // Assert
             action.ShouldThrow<DomainException>().WithMessage($"Forum not found: 1");
         }
 
         [Fact]
         public void AssignModeratorToForum_ForumValid_Success()
         {
-            var forumQueryService = new Mock<IForumQueryService>();
-            var forumRepository = new Mock<IForumRepository>();
-            var creator = new Creator("luis", "luis", "lruiz@plainconcepts.com");
-            var moderator = new Moderator("roberto", "roberto", "rgonzalez@plainconcepts.com");
+            // Arrange
+            var forum = Forum();
+            var sut = ForumApplicationServiceTestable.CreateSut(forum, Moderator());
+
+            // Act
+            sut.AssignModeratorToForum("1", "1", "1");
+
+            // Assert
+            forum.GetMutatingEvents()
+                .SingleOrDefault(e => e.GetType() == typeof (ForumModeratorChanged))
+                .Should()
+                .NotBe(null);
+        }
+
+        Forum Forum()
+        {
             var forum = new Forum(
                 new Tenant("1"),
                 new ForumId("1"),
-                creator,
-                moderator, "test", "test", "test");
-            forumRepository.Setup(x => x.Get(It.IsAny<Tenant>(), It.IsAny<ForumId>())).Returns(forum);
-            var discussionRepository = new Mock<IDiscussionRepository>();
-            var postRepository = new Mock<IPostRepository>();
-            var forumIdentityService = new ForumIdentityService(
-                discussionRepository.Object,
-                forumRepository.Object,
-                postRepository.Object);
-            var discussionQueryService = new Mock<IDiscussionQueryService>();
-            var collaboratorService = new Mock<ICollaboratorService>();
-            collaboratorService.Setup(x => x.GetModeratorFrom(It.IsAny<Tenant>(), It.IsAny<string>())).Returns(moderator);
-            var sut = new ForumApplicationService(
+                Creator(),
+                Moderator(),
+                "test",
+                "test",
+                "test");
+
+            return forum;
+        }
+
+        Creator Creator()
+        {
+            var creator = new Creator("luis", "luis", "lruiz@plainconcepts.com");
+            return creator;
+        }
+
+        Moderator Moderator()
+        {
+            return new Moderator("roberto", "roberto", "rgonzalez@plainconcepts.com");
+        }
+
+        public class ForumApplicationServiceTestable : ForumApplicationService
+        {
+            ForumApplicationServiceTestable(
+                Mock<IForumQueryService> forumQueryService,
+                Mock<IForumRepository> forumRepository,
+                ForumIdentityService forumIdentityService,
+                Mock<IDiscussionQueryService> discussionQueryService,
+                Mock<IDiscussionRepository> discussionRepository,
+                Mock<ICollaboratorService> collaboratorService) :
+            base(
                 forumQueryService.Object,
                 forumRepository.Object,
                 forumIdentityService,
                 discussionQueryService.Object,
                 discussionRepository.Object,
-                collaboratorService.Object);
+                collaboratorService.Object)
+            {
+            }
 
-            sut.AssignModeratorToForum("1", "1", "1");
+            public static ForumApplicationServiceTestable CreateSut(Forum forum, Moderator moderator)
+            {
+                var forumQueryService = new Mock<IForumQueryService>();
+                var forumRepository = new Mock<IForumRepository>();
+                var discussionRepository = new Mock<IDiscussionRepository>();
+                var postRepository = new Mock<IPostRepository>();
+                var forumIdentityService = new ForumIdentityService(
+                    discussionRepository.Object,
+                    forumRepository.Object,
+                    postRepository.Object);
+                var discussionQueryService = new Mock<IDiscussionQueryService>();
+                var collaboratorService = new Mock<ICollaboratorService>();
 
-            forum.GetMutatingEvents()
-                .SingleOrDefault(e => e.GetType() == typeof (ForumModeratorChanged))
-                .Should()
-                .NotBe(null);
+                forumRepository
+                    .Setup(x => x.Get(It.IsAny<Tenant>(), It.IsAny<ForumId>()))
+                    .Returns(forum);
+
+                collaboratorService
+                    .Setup(x => x.GetModeratorFrom(It.IsAny<Tenant>(), It.IsAny<string>()))
+                    .Returns(moderator);
+
+                return new ForumApplicationServiceTestable(
+                    forumQueryService,
+                    forumRepository,
+                    forumIdentityService,
+                    discussionQueryService,
+                    discussionRepository,
+                    collaboratorService);
+            }
         }
     }
 }

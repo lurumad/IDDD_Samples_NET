@@ -46,7 +46,6 @@ namespace SaaSOvation.Common.Domain.Model
         protected void Apply(IDomainEvent e)
         {
             this.mutatingEvents.Add(e);
-            When(e);
         }
     }
 }

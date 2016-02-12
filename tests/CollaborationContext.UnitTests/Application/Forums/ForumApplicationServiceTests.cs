@@ -9,7 +9,7 @@ using SaaSOvation.Collaboration.Domain.Model.Tenants;
 using SaaSOvation.Common.Domain.Model;
 using Xunit;
 
-namespace CollaborationContext.UnitTests
+namespace CollaborationContext.UnitTests.Application.Forums
 {
     public class ForumApplicationServiceTests
     {

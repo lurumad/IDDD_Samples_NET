@@ -14,7 +14,7 @@ namespace CollaborationContext.UnitTests
     public class ForumApplicationServiceTests
     {
         [Fact]
-        public void AssignModeratorToForum_ForumNull_ThrowException()
+        public void AssignModeratorToForum_ForumNNoExists_ThrowException()
         {
             var forumQueryService = new Mock<IForumQueryService>();
             var forumRepository = new Mock<IForumRepository>();
@@ -40,7 +40,7 @@ namespace CollaborationContext.UnitTests
         }
 
         [Fact]
-        public void AssignModeratorToForum_ForumValid_Success()
+        public void AssignModeratorToForum_ForumExists_Success()
         {
             var forumQueryService = new Mock<IForumQueryService>();
             var forumRepository = new Mock<IForumRepository>();

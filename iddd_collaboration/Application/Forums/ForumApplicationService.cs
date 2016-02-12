@@ -7,6 +7,7 @@ using SaaSOvation.Collaboration.Domain.Model.Forums;
 using SaaSOvation.Collaboration.Domain.Model.Collaborators;
 using SaaSOvation.Collaboration.Domain.Model.Tenants;
 using SaaSOvation.Collaboration.Application.Forums.Data;
+using SaaSOvation.Common.Domain.Model;
 
 namespace SaaSOvation.Collaboration.Application.Forums
 {
@@ -40,6 +41,11 @@ namespace SaaSOvation.Collaboration.Application.Forums
             var tenant = new Tenant(tenantId);
 
             var forum = this.forumRepository.Get(tenant, new ForumId(forumId));
+
+            if (forum == null)
+            {
+                throw new DomainException($"Forum not found: {forumId}");
+            }
 
             var moderator = this.collaboratorService.GetModeratorFrom(tenant, moderatorId);
 

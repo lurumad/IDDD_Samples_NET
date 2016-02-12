@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain.Model\AssertionConcern.cs" />
+    <Compile Include="Domain.Model\DomainException.cs" />
     <Compile Include="Domain.Model\Entity.cs" />
     <Compile Include="Domain.Model\EventSourcedRootEntity.cs" />
     <Compile Include="Domain.Model\HashCodeHelper.cs" />

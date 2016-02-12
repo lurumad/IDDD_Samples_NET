@@ -14,7 +14,7 @@ namespace CollaborationContext.UnitTests
     public class ForumApplicationServiceTests
     {
         [Fact]
-        public void AssignModeratorToForum_ForumNull_ThrowException()
+        public void when_assign_moderator_to_forum_that_does_not_exists_then_should_thrown_domain_exception()
         {
             // Arrange
             var sut = ForumApplicationServiceTestable.CreateSut(null, null);
@@ -23,11 +23,11 @@ namespace CollaborationContext.UnitTests
             Action action = () => sut.AssignModeratorToForum("1", "1", "1");
 
             // Assert
-            action.ShouldThrow<DomainException>().WithMessage($"Forum not found: 1");
+            action.ShouldThrow<DomainException>().WithMessage("Forum not found: 1");
         }
 
         [Fact]
-        public void AssignModeratorToForum_ForumValid_Success()
+        public void when_assign_moderator_to_forum_exists_then_should_apply_forum_moderator_changed_event()
         {
             // Arrange
             var forum = Forum();
